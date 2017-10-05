@@ -1,0 +1,9 @@
+#ps -A |grep gdialog || env DISPLAY=":0" 
+#LANG=ru_RU.UTF-8 gdialog --title "Напоминание" --infobox "Разминка\!\!\!\n`LANG=ru_RU.UTF-8 date`"
+
+
+DISPLAY=":0" feh 0.jpg&
+sleep 3
+killall -9 feh
+
+#notify-send 'Dont sleep!'
