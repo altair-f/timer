@@ -1,9 +1,22 @@
-#ps -A |grep gdialog || env DISPLAY=":0" 
-#LANG=ru_RU.UTF-8 gdialog --title "Напоминание" --infobox "Разминка\!\!\!\n`LANG=ru_RU.UTF-8 date`"
+#!/bin/bash
+
+# this shit displays a notify dialog. set the time by $ crontab -e, not root!
+
+kill -9 `pidof zenity`	# kill zenity for safety from a sin
+
+temP=zz_note_bebe_temp	# i can't find a method to avoid a creation of a temp file!
+note=note_bene		# 'note_bene' is a file with todo-list
 
 
-DISPLAY=":0" feh 0.jpg&
-sleep 3
-killall -9 feh
+cp $note $temP
 
-#notify-send 'Dont sleep!'
+DISPLAY=:0 zenity --text-info --editable --filename $temP > $note
+
+if [[ -z `grep -i [а-яa-z] $note` ]]	# a protection on deleting of todo-list by 'esc'
+  then cat $temP > $note
+fi
+
+
+rm $temP
+
+
