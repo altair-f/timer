@@ -1,22 +1,25 @@
-#!/bin/bash
-
-# this shit displays a notify dialog. set the time by $ crontab -e, not root!
-
-kill -9 `pidof zenity`	# kill zenity for safety from a sin
-
-temP=zz_note_bebe_temp	# i can't find a method to avoid a creation of a temp file!
-note=note_bene		# 'note_bene' is a file with todo-list
+#! /bin/bash
+# timer v.2.
+# displays random picture from Downloads
+# here are 2 parallel caunters: 1) for pict; 2) for number - it seems as a slowpoke for pity ((
 
 
-cp $note $temP
+pic_dir=~/Downloads
 
-DISPLAY=:0 zenity --text-info --editable --filename $temP > $note
+npic=`ls $pic_dir|grep jpg|wc|awk '{print $1}'`
+rand_npic=$((RANDOM%$npic+1))
 
-if [[ -z `grep -i [а-яa-z] $note` ]]	# a protection on deleting of todo-list by 'esc'
-  then cat $temP > $note
-fi
+i=0
 
-
-rm $temP
-
-
+for pic in $pic_dir/*.jpg
+do
+  i=$(( $i+1 ))
+  if [ $i = $rand_npic ]
+  then
+    DISPLAY=:0 feh "$pic" &
+    sleep 3
+    kill -SIGKILL %1
+    break
+  fi
+done
+    
