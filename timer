@@ -1,25 +1,20 @@
 #! /bin/bash
-# timer v.2.
-# displays random picture from Downloads
-# here are 2 parallel caunters: 1) for pict; 2) for number - it seems as a slowpoke for pity ((
+# displays note from 'note_bene' via i3-nagbar
+# removes it after 3 sec
 
 
-pic_dir=~/Downloads
 
-npic=`ls $pic_dir|grep jpg|wc|awk '{print $1}'`
-rand_npic=$((RANDOM%$npic+1))
+# i don't know exactly about other notifiers, it kills them (blocked)
+# just, notify-osd prevents to run dunst, so, i kill gnome-notifiers
+#kill -SIGTERM `pidof notify-osd`
+#kill -SIGTERM `pidof zenity`
 
-i=0
 
-for pic in $pic_dir/*.jpg
-do
-  i=$(( $i+1 ))
-  if [ $i = $rand_npic ]
-  then
-    DISPLAY=:0 feh "$pic" &
-    sleep 3
-    kill -SIGKILL %1
-    break
-  fi
-done
+
+# the option '-b' - button - is studied by me very slow, it is not correct now
+
+aa=`cat ~/note_bene`
+i3-nagbar -t warning -f pango:monospace 16 -m "	$aa" -b '' 'i3-msg exit' &
+sleep 3
+kill -9 `pidof i3-nagbar`
     
